@@ -1,62 +1,7 @@
-import UsersTable.active
-import UsersTable.birthDate
-import UsersTable.id
-import UsersTable.nationalCode
-import UsersTable.username
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import org.h2.api.H2Type.JSON
-import org.h2.util.json.JSONString
+package business.tables
+
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-
-@Serializable
-open class UserInit(
-    var username: String, var nationalCode: Long, var birthDate: String?,
-    var active: Boolean
-) {
-
-
-}
-
-@Serializable
-open class UserFinal(
-    var id: Int,
-    var username: String,
-    var nationalCode: Long,
-    var birthDate: String?,
-    var active: Boolean
-    
-) {
-    companion object {
-        fun convertToJson(userInTable: ResultRow): String {
-            val user = UserFinal(
-                userInTable[UsersTable.id],
-                userInTable[UsersTable.username],
-                userInTable[UsersTable.nationalCode],
-                userInTable[UsersTable.birthDate],
-                userInTable[UsersTable.active]
-            )
-            val printAble = Json { prettyPrint = true }
-            return printAble.encodeToString(user)
-        }
-
-        fun convertListToJson(usersInTable: List<ResultRow>): String {
-            val users = usersInTable.map { row ->
-                UserFinal(
-                    id = row[id],
-                    username = row[username],
-                    nationalCode = row[nationalCode],
-                    birthDate = row[birthDate],
-                    active = row[active]
-                )
-            }
-            val printAble = Json { prettyPrint = true }
-            return printAble.encodeToString(users)
-        }
-    }
-}
 
 object UsersTable : Table("users") {
 
@@ -70,7 +15,7 @@ object UsersTable : Table("users") {
 
     fun insert(user: UserInit) : String {
         return transaction {
-            val id = UsersTable.insert {
+            val id = insert {
                 it[username] = user.username
                 it[nationalCode] = user.nationalCode
                 it[birthDate] = user.birthDate
@@ -101,13 +46,13 @@ object UsersTable : Table("users") {
 
     private fun getActiveUsers(): List<ResultRow> {
         return transaction {
-            UsersTable.select { UsersTable.active eq true }.toList()
+            UsersTable.select { active eq true }.toList()
         }
     }
 
     private fun getNonActiveUsers(): List<ResultRow> {
         return transaction {
-            UsersTable.select { UsersTable.active eq false }.toList()
+            UsersTable.select { active eq false }.toList()
         }
     }
 
@@ -132,7 +77,7 @@ object UsersTable : Table("users") {
         val user = readUserById(userID)
         return transaction{
             if (user != null) {
-                if (!user[UsersTable.active]) {
+                if (!user[active]) {
                     UsersTable.update({ UsersTable.id eq user[UsersTable.id] }) {
                         it[active] = true
                     }
@@ -150,4 +95,3 @@ object UsersTable : Table("users") {
         }
     }
 }
-

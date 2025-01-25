@@ -25,7 +25,6 @@ class CityService(private val connection: Connection) {
 
     private var newCityId = 0
 
-    // Create new city
     suspend fun create(city: City): Int = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(INSERT_CITY, Statement.RETURN_GENERATED_KEYS)
         statement.setString(1, city.name)
