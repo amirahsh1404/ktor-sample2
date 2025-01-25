@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>User Dashboard</h1>
+
+    <!-- Section: View Logged-in User Information -->
+
+    <!-- Section: Search for a User by ID -->
+    <h2>Search User by ID</h2>
+    <form action= "/get-users-by-id" method = "post" >
+        <input type="number" id="search-user-id" name = "id" placeholder="Enter User ID" required />
+        <button type="submit">Search</button>
+    </form>
+    <div id="search-result" class="output">
+        <!-- Search results will be dynamically displayed here -->
+    </div>
+
+    <!-- Section: Change Active Status -->
+    <h2>Change Active Status</h2>
+    <form action="/change-active-mod" method="post">
+        <input type="number" id = "change_active_id" name = "id" placeholder="Enter User ID" required />
+        <button type="submit">Toggle Active Status</button>
+    </form>
+    <div id="change-active-result" class="output">
+        <!-- Result of active status change will appear here -->
+    </div>
+
+    <!-- Section: Get Active and Non-Active Users -->
+    <h2>Get Users by Active Status</h2>
+    <form action="/get-actives" method="post">
+        <button id="get-active-users">Get Active Users</button>
+    </form>
+    <form action="/get-not-actives" method="post">
+        <button id="get-non-active-users">Get Non-Active Users</button>
+    </form>
+    <div id="active-users-result" class="output">
+        <!-- Active/Non-Active users will be displayed here -->
+    </div>
+</div>
+
+</body>
+</html>
