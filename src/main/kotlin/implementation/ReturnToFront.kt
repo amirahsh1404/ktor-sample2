@@ -1,6 +1,2 @@
-package implementation;
+package implementation
 
-public class ReturnToFront {
-
-
-}

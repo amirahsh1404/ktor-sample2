@@ -1,4 +1,4 @@
-package business.tables
+package implementation.tables
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -13,19 +13,19 @@ object UsersTable : Table("users") {
 
     override val primaryKey = PrimaryKey(id)
 
-    fun insert(user: UserInit) : String {
-        return transaction {
-            val id = insert {
-                it[username] = user.username
-                it[nationalCode] = user.nationalCode
-                it[birthDate] = user.birthDate
-                it[active] = user.active
-            } get UsersTable.id
-            UsersTable.select { UsersTable.id eq id}.singleOrNull()
-                ?.let { UserFinal.convertToJson(it)}
-                ?: "Not been able to create new user"
-        }
-    }
+//    fun insert(user: UserInit) : String {
+//        return transaction {
+//            val id = insert {
+//                it[username] = user.username
+//                it[nationalCode] = user.nationalCode
+//                it[birthDate] = user.birthDate
+//                it[active] = user.active
+//            } get UsersTable.id
+//            UsersTable.select { UsersTable.id eq id}.singleOrNull()
+//                ?.let { UserFinal.convertToJson(it)}
+//                ?: "Not been able to create new user"
+//        }
+//    }
 
     private fun readUserById(userId: Int): ResultRow? {
         return transaction {

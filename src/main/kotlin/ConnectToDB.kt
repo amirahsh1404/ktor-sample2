@@ -6,8 +6,6 @@ import UsersTable.username
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.h2.api.H2Type.JSON
-import org.h2.util.json.JSONString
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 

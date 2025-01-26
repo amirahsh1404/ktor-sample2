@@ -9,7 +9,6 @@ class CargoServicer(
     override var phoneNumber: String,
     override var money: Double,
     var cargoList: MutableList<Cargo>,
-    var routes: List<List<Route>>,
 
     ) : ParentUser(username, password, name, email, phoneNumber, money) {
 }

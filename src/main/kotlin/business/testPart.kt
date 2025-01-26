@@ -17,7 +17,7 @@ class testPart {
 
         embeddedServer(
             Netty,
-            port = 9292, // This is the port on which Ktor is listening
+            port = 9292,
             host = "0.0.0.0",
             module = Application::module
         ).start(wait = true)
