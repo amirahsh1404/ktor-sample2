@@ -26,11 +26,10 @@ object UserTable : Table("user") {
         }
     }
 
-    fun readUserPassword(username: String): String? {
-        val user = readUserByUserName(username)
-        return if (user != null) {
-            user[UserTable.password]
-        } else null
+    fun readUserPassword(username: String): String {
+        val user = readUserByUserName(username)!!
+
+        return user[UserTable.password]
     }
 
     fun insertUser(
@@ -39,18 +38,13 @@ object UserTable : Table("user") {
         fullNameEntered: String,
         emailEntered: String
     ): Boolean {
-        var row: ResultRow? = null
         transaction {
-            val id = UserTable.insert {
+            UserTable.insert {
                 it[username] = usernameEntered
                 it[password] = passwordEntered
                 it[fullName] = fullNameEntered
                 it[email] = emailEntered
-            } get UserTable.id
-            row = UserTable.select { UserTable.id eq id }.singleOrNull()
-        }
-        if (row == null) {
-            return false
+            }
         }
         return true
     }
@@ -61,27 +55,21 @@ object UserTable : Table("user") {
         fullNameEntered: String,
         emailEntered: String
     ): Boolean {
-        val userInTable = readUserByUserName(usernameEntered)
         transaction {
-            if (userInTable != null) {
-                UserTable.update({ UserTable.username eq usernameEntered }) {
-                    it[fullName] = fullNameEntered
-                    it[email] = emailEntered
-                }
+            UserTable.update({ UserTable.username eq usernameEntered }) {
+                it[fullName] = fullNameEntered
+                it[email] = emailEntered
             }
-        }
-        if (userInTable == null) {
-            return false
         }
         return true
     }
 
     fun delete(usernameEntered: String): Boolean {
         transaction {
-                UserTable.deleteWhere { UserTable.username eq usernameEntered }
-            }
-        return true
+            UserTable.deleteWhere { UserTable.username eq usernameEntered }
         }
+        return true
     }
+}
 
 

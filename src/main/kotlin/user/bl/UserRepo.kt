@@ -9,7 +9,7 @@ import user.bl.entity.Username
 interface UserRepo{
     fun getByUsername(username: Username): User?
     fun getByEmail(email: Email): User?
-    fun saveUser(user: user.bl.entity.User) : Boolean
+    fun saveUser(user: User) : Boolean
     fun update(username: Username, fullName: FullName, email: Email) : Boolean
     fun delete(username : Username) : Boolean
 

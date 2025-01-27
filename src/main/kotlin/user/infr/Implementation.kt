@@ -1,9 +1,7 @@
 package user.infr
 
-
 import user.bl.UserRepo
 import user.bl.entity.*
-
 
 object Implementation : UserRepo {
     override fun getByUsername(username: Username): User? {
@@ -38,7 +36,6 @@ object Implementation : UserRepo {
     override fun update(username: Username, fullName: FullName, email: Email): Boolean {
         return UserTable.update(username.username,fullName.fullName,email.email)
     }
-
 
     override fun delete(username : Username): Boolean {
         return UserTable.delete(username.username)
