@@ -1,0 +1,48 @@
+user:
+username:unique
+fullName:String
+email:String
+birthdate:ZoneDateTime
+
+
+bl
+userService
+logic haye businessiye user
+
+
+usecase:
+flow
+
+
+
+
+createUserUsecase:
+userservice.userExists()
+
+userservice.emailExists()
+
+userService.save(user)
+
+
+service:
+userExists(username,fullname) {
+userrepo.get(username)==null
+
+}
+
+emailExist{
+userRepo.getByEmail(email)}
+
+
+
+Email(){
+3char @ 2char.2char
+}
+
+
+
+ولیدیشن های مربوط به خود یوزر در ابجکت یا انتیتی های مربوط به خودش بررسی میشه
+ولیدیشن هایی که نیاز به رده پایین تری دارن از طریق ریپوزیتوری و اینترفیس به صورت غیر مستقیم کال و چک میشن
+تو یوز کیس اونایی که مربوط به سرویس هست رو استفاده میکنیک
+اونایی که مربوط به انتیتی و ابجکت ان کنترلر
+

@@ -25,7 +25,7 @@ open class UserFinal(
     var nationalCode: Long,
     var birthDate: String?,
     var active: Boolean
-    
+
 ) {
     companion object {
         fun convertToJson(userInTable: ResultRow): String {
@@ -66,7 +66,7 @@ object UsersTable : Table("users") {
 
     override val primaryKey = PrimaryKey(id)
 
-    fun insert(user: UserInit) : String {
+    fun insert(user: UserInit): String {
         return transaction {
             val id = UsersTable.insert {
                 it[username] = user.username
@@ -74,8 +74,8 @@ object UsersTable : Table("users") {
                 it[birthDate] = user.birthDate
                 it[active] = user.active
             } get UsersTable.id
-            UsersTable.select { UsersTable.id eq id}.singleOrNull()
-                ?.let { UserFinal.convertToJson(it)}
+            UsersTable.select { UsersTable.id eq id }.singleOrNull()
+                ?.let { UserFinal.convertToJson(it) }
                 ?: "Not been able to create new user"
         }
     }
@@ -128,7 +128,7 @@ object UsersTable : Table("users") {
 
     fun changeActivation(userID: Int): String {
         val user = readUserById(userID)
-        return transaction{
+        return transaction {
             if (user != null) {
                 if (!user[UsersTable.active]) {
                     UsersTable.update({ UsersTable.id eq user[UsersTable.id] }) {
