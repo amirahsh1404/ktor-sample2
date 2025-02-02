@@ -1,10 +1,9 @@
 package userandcustomerservice.implementation.tables
 
-import business.dataclasses.ParentUser
-import implementation.tables.customerTable.select
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
+import userandcustomerservice.business.dataclasses.ParentUser
 
 object cargoservicerTable : Table("cargoservicer") {
     val id = integer("servicerid")

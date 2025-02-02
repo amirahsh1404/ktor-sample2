@@ -1,9 +1,9 @@
 package userandcustomerservice.implementation
 
-import business.dataclasses.ParentUser
-import implementation.tables.ParentUserTable
-import implementation.tables.cargoservicerTable
-import implementation.tables.customerTable
+import userandcustomerservice.business.dataclasses.ParentUser
+import userandcustomerservice.implementation.tables.ParentUserTable
+import userandcustomerservice.implementation.tables.cargoservicerTable
+import userandcustomerservice.implementation.tables.customerTable
 
 var loggedInUser: ParentUser? = null
 

@@ -8,11 +8,12 @@ import org.jetbrains.exposed.sql.Database
 
 fun main(args: Array<String>) {
     Database.connect(
-        url = "jdbc:postgresql://localhost:5432/user",
+        url = "jdbc:postgresql://localhost:5432/postgres",
         driver = "org.postgresql.Driver",
         user = "postgres",
         password = ""
     )
+
 
     embeddedServer(
         Netty,

@@ -1,9 +1,18 @@
 package userandcustomerservice.business
 
-import business.dataclasses.ParentUser
+import org.h2.engine.User
+import userandcustomerservice.business.dataclasses.ParentUser
 import userandcustomerservice.implementation.Implementation as Im
 
 class UserService : UserRepository {
+    override fun get(username: String): User? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getByEmail(email: String): User? {
+        TODO("Not yet implemented")
+    }
+
     override fun createUser(
         username: String, password: String, name: String,
         email: String, phoneNumber: String, money: Double

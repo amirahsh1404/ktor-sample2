@@ -3,8 +3,13 @@ package user.application
 import user.domain.UserRepo
 import user.domain.UserService
 import user.domain.cases.*
-import user.domain.entity.*
-import user.infr.httpserver.model.UserJson
+import user.domain.entity.Email
+import user.domain.entity.FullName
+import user.domain.entity.Password
+import user.domain.entity.Username
+import user.infr.httpserver.model.ResultPackage.UserResult
+import user.infr.httpserver.model.ResultPackage.UserSuccess
+import user.infr.httpserver.model.ResultPackage.UserSuccessType
 import user.infr.repo.UserRepositoryImpl
 
 
@@ -14,7 +19,7 @@ class UserController {
     private val userService: UserService = UserService(userRepo)
 
 
-    fun createUser(username: String, password: String, fullName: String, email: String): String {
+    fun createUser(username: String, password: String, fullName: String, email: String): UserResult {
         try {
             val usernameCheck = Username(username)
             val passwordCheck = Password(password)
@@ -25,14 +30,13 @@ class UserController {
 
             val createUserUseCase = CreateUserUseCase(userService)
             createUserUseCase.execute(cmd)
-
+            return UserResult.Success(UserSuccess(UserSuccessType.CREATE_SUCCESS))
         } catch (e: Exception) {
-            return "Error: ${e.message}"
+            return UserResult.Error(e)
         }
-        return "created"
     }
 
-    fun loginUser(username: String, password: String): String {
+    fun loginUser(username: String, password: String): UserResult {
         try {
             val usernameCheck = Username(username)
             val passwordCheck = Password(password)
@@ -42,13 +46,13 @@ class UserController {
             val loginUserUseCase = LoginUserUseCase(userService)
             loginUserUseCase.execute(cmd)
 
+            return UserResult.Success(UserSuccess(UserSuccessType.LOGIN_SUCCESS))
         } catch (e: Exception) {
-            return "Error: ${e.message}"
+            return UserResult.Error(e)
         }
-        return "logged in"
     }
 
-    fun changeInformation(username: String, fullName: String, email: String): String {
+    fun changeInformation(username: String, fullName: String, email: String): UserResult {
         try {
             val usernameCheck = Username(username)
             val fullNameCheck = FullName(fullName)
@@ -58,14 +62,13 @@ class UserController {
 
             val changeUserInformationUseCase = ChangeUserInformationUseCase(userService)
             changeUserInformationUseCase.execute(cmd)
-
+            return UserResult.Success(UserSuccess(UserSuccessType.CHANGE_INFO_SUCCESS))
         } catch (e: Exception) {
-            return "Error: ${e.message}"
+            return UserResult.Error(e)
         }
-        return "changed"
     }
 
-    fun deleteUser(username: String): String {
+    fun deleteUser(username: String): UserResult {
         try {
             val usernameCheck = Username(username)
 
@@ -74,13 +77,14 @@ class UserController {
             val deleteUserUseCase = DeleteUserUseCase(userService)
             deleteUserUseCase.execute(cmd)
 
+
+            return UserResult.Success(UserSuccess(UserSuccessType.DELETE_SUCCESS))
         } catch (e: Exception) {
-            return "Error: ${e.message}"
+            return UserResult.Error(e)
         }
-        return "deleted"
     }
 
-    fun getInformation(username: String, password: String ): User {
+    fun getInformation(username: String, password: String ): UserResult {
         try {
             val usernameCheck = Username(username)
             val passwordCheck = Password(password)
@@ -88,10 +92,11 @@ class UserController {
             val cmd = GetInformationCmd(usernameCheck, passwordCheck)
 
             val getInformationUseCase = GetInformationUseCase(userService)
-            return getInformationUseCase.execute(cmd)
+            return UserResult.SuccessQuery(getInformationUseCase.execute(cmd))
+
 
         } catch (e: Exception) {
-            return "Error: ${e.message}"
+            return UserResult.Error(e)
         }
     }
 
