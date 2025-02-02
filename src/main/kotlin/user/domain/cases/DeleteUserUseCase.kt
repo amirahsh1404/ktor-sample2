@@ -5,7 +5,7 @@ import user.domain.entity.Username
 
 class DeleteUserUseCase(private val userService: UserService) {
 
-    fun deleteUser(cmd : DeleteUserCmd) {
+    fun execute(cmd : DeleteUserCmd) {
 
         val userExists = userService.exists(cmd.username)
         if (!userExists) {

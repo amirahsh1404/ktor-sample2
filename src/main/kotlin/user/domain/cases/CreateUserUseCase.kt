@@ -5,8 +5,7 @@ import user.domain.entity.*
 
 class CreateUserUseCase(private val userService: UserService) {
 
-    fun createUser(cmd: CreateUserCmd) {
-
+    fun execute(cmd: CreateUserCmd) {
 
         val userExists = userService.exists(cmd.username)
         if (userExists) {

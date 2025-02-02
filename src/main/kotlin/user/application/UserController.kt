@@ -3,10 +3,8 @@ package user.application
 import user.domain.UserRepo
 import user.domain.UserService
 import user.domain.cases.*
-import user.domain.entity.Email
-import user.domain.entity.FullName
-import user.domain.entity.Password
-import user.domain.entity.Username
+import user.domain.entity.*
+import user.infr.httpserver.model.UserJson
 import user.infr.repo.UserRepositoryImpl
 
 
@@ -16,17 +14,17 @@ class UserController {
     private val userService: UserService = UserService(userRepo)
 
 
-    fun createUser(username: String?, password: String?, fullName: String?, email: String?): String {
+    fun createUser(username: String, password: String, fullName: String, email: String): String {
         try {
-            val usernameCheck =Username(username)
-            val passwordCheck=Password(password)
-            val fullNameCheck =FullName(fullName)
-            val emailCheck =Email(email)
+            val usernameCheck = Username(username)
+            val passwordCheck = Password(password)
+            val fullNameCheck = FullName(fullName)
+            val emailCheck = Email(email)
 
             val cmd = CreateUserCmd(usernameCheck, passwordCheck, fullNameCheck, emailCheck)
 
             val createUserUseCase = CreateUserUseCase(userService)
-            createUserUseCase.createUser(cmd)
+            createUserUseCase.execute(cmd)
 
         } catch (e: Exception) {
             return "Error: ${e.message}"
@@ -34,7 +32,7 @@ class UserController {
         return "created"
     }
 
-    fun loginUser(username: String?, password: String?): String {
+    fun loginUser(username: String, password: String): String {
         try {
             val usernameCheck = Username(username)
             val passwordCheck = Password(password)
@@ -42,7 +40,7 @@ class UserController {
             val cmd = LoginUserCmd(usernameCheck, passwordCheck)
 
             val loginUserUseCase = LoginUserUseCase(userService)
-            loginUserUseCase.loginUser(cmd)
+            loginUserUseCase.execute(cmd)
 
         } catch (e: Exception) {
             return "Error: ${e.message}"
@@ -50,7 +48,7 @@ class UserController {
         return "logged in"
     }
 
-    fun changeInformation(username: String?, fullName: String?, email: String?): String {
+    fun changeInformation(username: String, fullName: String, email: String): String {
         try {
             val usernameCheck = Username(username)
             val fullNameCheck = FullName(fullName)
@@ -59,27 +57,43 @@ class UserController {
             val cmd = ChangeInformationCmd(usernameCheck, fullNameCheck, emailCheck)
 
             val changeUserInformationUseCase = ChangeUserInformationUseCase(userService)
-            changeUserInformationUseCase.changeInformationUser(cmd)
+            changeUserInformationUseCase.execute(cmd)
 
         } catch (e: Exception) {
             return "Error: ${e.message}"
         }
-        return "logged in"
+        return "changed"
     }
 
-    fun deleteUser(username: String?): String {
+    fun deleteUser(username: String): String {
         try {
             val usernameCheck = Username(username)
 
             val cmd = DeleteUserCmd(usernameCheck)
 
             val deleteUserUseCase = DeleteUserUseCase(userService)
-            deleteUserUseCase.deleteUser(cmd)
+            deleteUserUseCase.execute(cmd)
 
         } catch (e: Exception) {
             return "Error: ${e.message}"
         }
-        return "logged in"    }
+        return "deleted"
+    }
 
+    fun getInformation(username: String, password: String ): String {
+        try {
+            val usernameCheck = Username(username)
+            val passwordCheck = Password(password)
+
+            val cmd = GetInformationCmd(usernameCheck, passwordCheck)
+
+            val getInformationUseCase = GetInformationUseCase(userService)
+            val user : User = getInformationUseCase.execute(cmd)
+
+            return  UserJson.createJson(user)
+        } catch (e: Exception) {
+            return "Error: ${e.message}"
+        }
+    }
 
 }

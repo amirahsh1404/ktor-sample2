@@ -34,4 +34,7 @@ class UserService(private val userRepository: UserRepo) {
         return userRepository.delete(username)
     }
 
+    fun getUserInformation(username: Username): User {
+        return userRepository.getByUsername(username).let { it as User}
+    }
 }

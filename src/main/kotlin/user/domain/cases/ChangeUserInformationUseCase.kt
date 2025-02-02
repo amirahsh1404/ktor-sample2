@@ -7,16 +7,16 @@ import user.domain.entity.Username
 
 class ChangeUserInformationUseCase(private val userService: UserService) {
 
-    fun changeInformationUser(cmd : ChangeInformationCmd) {
+    fun execute(cmd : ChangeInformationCmd) {
 
         val userExists = userService.exists(cmd.username)
         if (userExists) {
-            throw Exception("User with username ${cmd.username.username} already exists")
+            throw Exception("User with username ${cmd.username.value} already exists")
         }
 
         val emailExists = userService.emailExists(cmd.email)
         if (emailExists) {
-            throw Exception("User with email ${cmd.email.email} already exists")
+            throw Exception("User with email ${cmd.email.value} already exists")
         }
 
         userService.changeInformation(cmd.username, cmd.fullName, cmd.email)
