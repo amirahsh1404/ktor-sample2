@@ -80,7 +80,7 @@ class UserController {
         return "deleted"
     }
 
-    fun getInformation(username: String, password: String ): String {
+    fun getInformation(username: String, password: String ): User {
         try {
             val usernameCheck = Username(username)
             val passwordCheck = Password(password)
@@ -88,9 +88,8 @@ class UserController {
             val cmd = GetInformationCmd(usernameCheck, passwordCheck)
 
             val getInformationUseCase = GetInformationUseCase(userService)
-            val user : User = getInformationUseCase.execute(cmd)
+            return getInformationUseCase.execute(cmd)
 
-            return  UserJson.createJson(user)
         } catch (e: Exception) {
             return "Error: ${e.message}"
         }

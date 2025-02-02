@@ -46,7 +46,7 @@ fun Application.configureRouting() {
             val username = call.parameters["username"].toString()
             val password = call.parameters["password"].toString()
 
-            val output = userController.getInformation(username, password)
+            val user = userController.getInformation(username, password)
 
             if (output.startsWith("Error")) {
                 call.respond(HttpStatusCode.BadRequest, output)
