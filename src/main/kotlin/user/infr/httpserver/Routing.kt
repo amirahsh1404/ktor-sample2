@@ -5,10 +5,9 @@ import io.ktor.server.http.content.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import user.application.UserController
-import user.application.UserControllerRepo
 
 fun Application.configureRouting() {
-    val userController: UserControllerRepo = UserController()
+    val userController = UserController()
     routing {
 
         staticResources("/content", "mycontent")
@@ -20,11 +19,11 @@ fun Application.configureRouting() {
             val fullName: String? = params["fullName"]
             val email: String? = params["email"]
 
-            val message: Boolean = userController.createUser(username, password, fullName, email)
+            val message: String = userController.createUser(username, password, fullName, email)
 
             val userJson: String? = null
             //TODO
-//            if (message)
+//            if (message )
 //                userjson =
             //TODO: Front Handles
         }
@@ -33,6 +32,8 @@ fun Application.configureRouting() {
             val params = call.receiveParameters()
             val username: String? = params["username"]
             val password: String? = params["password"]
+
+            val message: String = userController.loginUser(username, password)
 
             //TODO
 //            if (message)
@@ -47,6 +48,7 @@ fun Application.configureRouting() {
             val fullName = params["fullName"]
             val email = params["email"]
 
+            val message : String = userController.changeInformation(username, fullName, email)
             //TODO
 //            if (message)
 //                userjson =
@@ -57,6 +59,7 @@ fun Application.configureRouting() {
             val params = call.receiveParameters()
             val username: String? = params["username"]
 
+            val message : String = userController.deleteUser(username)
             //TODO
 //            if (message)
 //                userjson =

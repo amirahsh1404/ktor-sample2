@@ -4,16 +4,16 @@ import user.domain.UserService
 import user.domain.entity.Password
 import user.domain.entity.Username
 
-class LoginUseCase(private val userService: UserService) {
+class LoginUserUseCase(private val userService: UserService) {
 
-    fun loginUser(username: Username,  password : Password) {
+    fun loginUser(cmd : LoginUserCmd) {
 
-        val userExists = userService.exists(username)
+        val userExists = userService.exists(cmd.username)
         if (!userExists) {
             throw Exception("User doesnt exist")
         }
 
-        if (!userService.passwordIsCorrect(username,password) ) {
+        if (!userService.passwordIsCorrect(cmd.username,cmd.password) ) {
             throw Exception("Password not correct")
         }
 
@@ -21,3 +21,7 @@ class LoginUseCase(private val userService: UserService) {
 
     }
 }
+
+data class LoginUserCmd(
+    val username: Username,
+    val password: Password)

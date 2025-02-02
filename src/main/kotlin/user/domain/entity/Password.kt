@@ -1,13 +1,13 @@
 package user.domain.entity
 
-class Password (var password: String) {
+data class Password(var password: String?) {
 
-    fun createPassword(password: String) : String? {
-        return when {
-            password.length < 7 -> "Password should be at least 7 characters"
-            password.length > 20 -> "Password should be at most 20 characters"
-            !password.matches(Regex.password.toRegex()) -> "Password format is wrong"
-            else -> null
-        }
+    init {
+        require(password.isNullOrBlank()) { "Password should not be blank" }
+        require(password!!.length >= 7) { "Password should be at least 7 characters" }
+        require(password!!.length <= 20) { "Password should be at most 20 characters" }
+        require(password!!.matches(Regex.password.toRegex())) { "Password format is wrong" }
     }
+
+
 }
