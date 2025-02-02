@@ -25,13 +25,13 @@ object UserTable : Table("user") {
             UserTable.selectAll().where { UserTable.email eq email }.singleOrNull()
         }
     }
-
+    /*  TODO: ASK ABOUT PRIVACY
     fun readUserPassword(username: String): String {
         val user = readUserByUserName(username)!!
 
         return user[UserTable.password]
     }
-
+    */
     fun insertUser(
         usernameEntered: String,
         passwordEntered: String,
