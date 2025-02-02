@@ -1,6 +1,6 @@
-package user.bl
+package user.domain
 
-import user.bl.entity.*
+import user.domain.entity.*
 
 
 class UserService(private val userRepository: UserRepo) {

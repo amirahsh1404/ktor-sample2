@@ -1,4 +1,4 @@
-package user.bl.entity
+package user.domain.entity
 
 class FullName(var fullName: String) {
 

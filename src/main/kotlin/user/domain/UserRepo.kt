@@ -1,9 +1,9 @@
-package user.bl
+package user.domain
 
-import user.bl.entity.Email
-import user.bl.entity.FullName
-import user.bl.entity.User
-import user.bl.entity.Username
+import user.domain.entity.Email
+import user.domain.entity.FullName
+import user.domain.entity.User
+import user.domain.entity.Username
 
 
 interface UserRepo{

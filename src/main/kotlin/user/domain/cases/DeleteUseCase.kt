@@ -1,7 +1,7 @@
-package user.bl.cases
+package user.domain.cases
 
-import user.bl.UserService
-import user.bl.entity.Username
+import user.domain.UserService
+import user.domain.entity.Username
 
 class DeleteUseCase(private val userService: UserService) {
 

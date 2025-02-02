@@ -1,4 +1,4 @@
-package user.bl.entity
+package user.domain.entity
 
 data object Regex {
     val username = "[a-zA-Z0-9-_]+"

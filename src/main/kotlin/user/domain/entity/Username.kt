@@ -1,4 +1,4 @@
-package user.bl.entity
+package user.domain.entity
 
 class Username (var username: String){
 

@@ -1,9 +1,9 @@
-package user.bl.cases
+package user.domain.cases
 
-import user.bl.UserService
-import user.bl.entity.Email
-import user.bl.entity.FullName
-import user.bl.entity.Username
+import user.domain.UserService
+import user.domain.entity.Email
+import user.domain.entity.FullName
+import user.domain.entity.Username
 
 class ChangeInformationUseCase(private val userService: UserService) {
 

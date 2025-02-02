@@ -1,7 +1,7 @@
-package user.bl.cases
+package user.domain.cases
 
-import user.bl.UserService
-import user.bl.entity.*
+import user.domain.UserService
+import user.domain.entity.*
 
 class CreateUserUseCase(private val userService: UserService) {
 
