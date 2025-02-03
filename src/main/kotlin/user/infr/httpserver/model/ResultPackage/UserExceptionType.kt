@@ -1,10 +1,12 @@
 package user.infr.httpserver.model.ResultPackage
 
-enum class UserExceptionType(val message: String) {
-    USER_ALREADY_EXISTS("user with username '{username}' already exists"),
-    EMAIL_ALREADY_EXISTS("User with email '{email}' already exists"),
-    USER_DOES_NOT_EXIST("user with username '{username}' does not exist"),
-    PASSWORD_IS_NOT_CORRECT("password is wrong"),
+import io.ktor.http.*
+
+enum class UserExceptionType(val message: String, val statusCode: HttpStatusCode) {
+    USER_ALREADY_EXISTS("user with username '{username}' already exists", HttpStatusCode.Conflict),
+    EMAIL_ALREADY_EXISTS("User with email '{email}' already exists", HttpStatusCode.Conflict),
+    USER_DOES_NOT_EXIST("user with username '{username}' does not exist", HttpStatusCode.NotFound),
+    PASSWORD_IS_NOT_CORRECT("password is wrong", HttpStatusCode.NotAcceptable),
     ;
 
 

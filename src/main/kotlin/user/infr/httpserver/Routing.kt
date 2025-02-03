@@ -27,14 +27,18 @@ fun Application.configureRouting2() {
             when (val signUpResult =
                 userController.createUser(username, password, fullName, email)) {
                 is UserResult.Success -> {
-                    call.respond(HttpStatusCode.Accepted, signUpResult.value.userSuccessType.message)
+                    call.respond(signUpResult.value.userSuccessType.statusCode,
+                        signUpResult.value.userSuccessType.message)
                 }
 
-                is UserResult.Error<*, *> -> {
+                is UserResult.Error<* , *> -> {
+                    val exception = signUpResult.exception
 
-                    signUpResult.exception.message?.let { message ->
-                        call.respond(HttpStatusCode.BadRequest, message)
-                    }
+                    val status = signUpResult.getStatusCode(exception)
+                    val message = signUpResult.getMessage(exception)
+
+                    message?.let { call.respond(status, message) }
+
                 }
             }
 
@@ -52,9 +56,11 @@ fun Application.configureRouting2() {
                 }
 
                 is UserResult.Error<*, *> -> {
-                    loginResult.exception.message?.let { message ->
-                        call.respond(HttpStatusCode.BadRequest, message)
-                    }
+                    val exception = loginResult.exception
+                    val status = loginResult.getStatusCode(exception)
+                    val message = loginResult.getMessage(exception)
+
+                    message?.let { call.respond(status, message) }
                 }
             }
 
@@ -74,9 +80,11 @@ fun Application.configureRouting2() {
                 }
 
                 is UserResult.Error<*, *> -> {
-                    changeInfoResult.exception.message?.let { message ->
-                        call.respond(HttpStatusCode.BadRequest, message)
-                    }
+                    val exception = changeInfoResult.exception
+                    val status = changeInfoResult.getStatusCode(exception)
+                    val message = changeInfoResult.getMessage(exception)
+
+                    message?.let { call.respond(status, message) }
                 }
             }
 
@@ -94,9 +102,11 @@ fun Application.configureRouting2() {
                 }
 
                 is UserResult.Error<*, *> -> {
-                    deleteUserResult.exception.message?.let { message ->
-                        call.respond(HttpStatusCode.BadRequest, message)
-                    }
+                    val exception = deleteUserResult.exception
+                    val status = deleteUserResult.getStatusCode(exception)
+                    val message = deleteUserResult.getMessage(exception)
+
+                    message?.let { call.respond(status, message) }
                 }
             }
 
@@ -115,9 +125,11 @@ fun Application.configureRouting2() {
                 }
 
                 is UserResult.Error<*, *> -> {
-                    userGetInfoResult.exception.message?.let { message ->
-                        call.respond(HttpStatusCode.BadRequest, message)
-                    }
+                    val exception = userGetInfoResult.exception
+                    val status = userGetInfoResult.getStatusCode(exception)
+                    val message = userGetInfoResult.getMessage(exception)
+
+                    message?.let { call.respond(status, message) }
                 }
 
 

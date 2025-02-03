@@ -1,5 +1,12 @@
 package user.infr.httpserver.model.ResultPackage
 
-class UserExceptions(val userExceptionType : UserExceptionType, vararg args: Pair<String,String> ) : Exception(userExceptionType.formatMessage(*args)){
+import io.ktor.http.*
 
+class UserExceptions(
+    val userExceptionType: UserExceptionType,
+
+    vararg args: Pair<String, String>
+) :
+    Exception(userExceptionType.formatMessage(*args)) {
+    val statusCode: HttpStatusCode = userExceptionType.statusCode
 }

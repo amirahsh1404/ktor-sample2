@@ -10,5 +10,5 @@ data class Email(val value: String) {
         require(value.length >= 5) { throw ValidationExceptions(ValidationExceptionsType.EMAIL_IS_SHORT) }
         require(value.matches(Regex.email)) { throw ValidationExceptions(ValidationExceptionsType.EMAIL_FORMAT_WRONG) }
     }
-
 }
+
