@@ -12,10 +12,12 @@ enum class UserExceptionType(val message: String) {
 
     fun formatMessage(vararg args: Pair<String, String>): String {
         var dynamicMessage = message
+
         args.forEach { (key, value) ->
-            dynamicMessage = message.replace("{$key}", value)
+            dynamicMessage = message.replace("$key", value)
         }
-        return message
+
+        return dynamicMessage
     }
 
 

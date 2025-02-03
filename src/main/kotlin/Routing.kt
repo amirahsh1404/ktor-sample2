@@ -20,7 +20,7 @@ fun Application.configureRouting() {
         """.trimIndent()
         staticResources("/content", "mycontent")
 
-        post("/signup") {
+        post("/signup1") {
             val params = call.receiveParameters()
             val username = params["username"] ?: throw IllegalArgumentException("Username is required")
             val nationalCode =
@@ -36,7 +36,7 @@ fun Application.configureRouting() {
             //call.respondRedirect("content/signed_in.html")
         }
 
-        post("/signin") {
+        post("/signin1") {
             val params = call.receiveParameters()
             val id = params["id"]?.toIntOrNull() ?: throw IllegalArgumentException("ID is required")
             val user = UsersTable.getUserById(id)
@@ -46,7 +46,7 @@ fun Application.configureRouting() {
             call.respondText(text, type)
         }
 
-        post("/get-users-by-id") {
+        post("/get-users-by-id1") {
             val params = call.receiveParameters()
             val id = params["id"]?.toIntOrNull() ?: throw IllegalArgumentException("ID is required")
             val user = UsersTable.getUserById(id)
@@ -56,7 +56,7 @@ fun Application.configureRouting() {
             call.respondText(text, type)
         }
 
-        post("/change-active-mod") {
+        post("/change-active-mod1") {
             val params = call.receiveParameters()
             val id = params["id"]?.toIntOrNull() ?: throw IllegalArgumentException("ID is required")
             val text: String = "<h1>" + UsersTable.changeActivation(id) + "</h1>"
@@ -64,7 +64,8 @@ fun Application.configureRouting() {
             call.respondText(text, type)
         }
 
-        post("/get-actives") {
+        post("/get-actives1") {
+
             val activeUsers = UsersTable.activeUsers(true)
 
             val text: String = part1 + activeUsers + part2
@@ -72,7 +73,7 @@ fun Application.configureRouting() {
             call.respondText(text, type)
         }
 
-        post("/get-not-actives") {
+        post("/get-not-actives1") {
             val notActiveUsers = UsersTable.activeUsers(false)
 
             val text: String = part1 + notActiveUsers + part2

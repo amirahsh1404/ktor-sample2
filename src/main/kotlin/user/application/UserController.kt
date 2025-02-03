@@ -3,10 +3,7 @@ package user.application
 import user.domain.UserRepo
 import user.domain.UserService
 import user.domain.cases.*
-import user.domain.entity.Email
-import user.domain.entity.FullName
-import user.domain.entity.Password
-import user.domain.entity.Username
+import user.domain.entity.*
 import user.infr.httpserver.model.ResultPackage.UserResult
 import user.infr.httpserver.model.ResultPackage.UserSuccess
 import user.infr.httpserver.model.ResultPackage.UserSuccessType
@@ -19,7 +16,7 @@ class UserController {
     private val userService: UserService = UserService(userRepo)
 
 
-    fun createUser(username: String, password: String, fullName: String, email: String): UserResult {
+    fun createUser(username: String, password: String, fullName: String, email: String): UserResult<UserSuccess> {
         try {
             val usernameCheck = Username(username)
             val passwordCheck = Password(password)
@@ -36,7 +33,7 @@ class UserController {
         }
     }
 
-    fun loginUser(username: String, password: String): UserResult {
+    fun loginUser(username: String, password: String): UserResult<UserSuccess> {
         try {
             val usernameCheck = Username(username)
             val passwordCheck = Password(password)
@@ -52,7 +49,7 @@ class UserController {
         }
     }
 
-    fun changeInformation(username: String, fullName: String, email: String): UserResult {
+    fun changeInformation(username: String, fullName: String, email: String): UserResult<UserSuccess> {
         try {
             val usernameCheck = Username(username)
             val fullNameCheck = FullName(fullName)
@@ -68,7 +65,7 @@ class UserController {
         }
     }
 
-    fun deleteUser(username: String): UserResult {
+    fun deleteUser(username: String): UserResult<UserSuccess> {
         try {
             val usernameCheck = Username(username)
 
@@ -84,7 +81,7 @@ class UserController {
         }
     }
 
-    fun getInformation(username: String, password: String ): UserResult {
+    fun getInformation(username: String, password: String ): UserResult<User> {
         try {
             val usernameCheck = Username(username)
             val passwordCheck = Password(password)
@@ -92,12 +89,23 @@ class UserController {
             val cmd = GetInformationCmd(usernameCheck, passwordCheck)
 
             val getInformationUseCase = GetInformationUseCase(userService)
-            return UserResult.SuccessQuery(getInformationUseCase.execute(cmd))
+            return UserResult.Success(getInformationUseCase.execute(cmd))
 
 
         } catch (e: Exception) {
             return UserResult.Error(e)
         }
+    }
+
+    fun getInformationEx(username: String, password: String ): User? {
+            val usernameCheck = Username(username)
+            val passwordCheck = Password(password)
+
+            val cmd = GetInformationCmd(usernameCheck, passwordCheck)
+
+            val getInformationUseCase = GetInformationUseCase(userService)
+            return getInformationUseCase.execute(cmd)
+
     }
 
 }

@@ -15,7 +15,7 @@ class GetInformationUseCase(val userService: UserService) {
         if (!userExists) {
             throw UserExceptions(
                 UserExceptionType.USER_DOES_NOT_EXIST,
-                "username" to cmd.username.value
+                "{username}" to cmd.username.value
             )
         }
 
