@@ -2,7 +2,6 @@ package user.infr.httpserver
 
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import user.application.UserController
@@ -13,16 +12,13 @@ fun Application.configureRouting2() {
     val userController = UserController()
     routing {
 
-        get("/hello2") {
+        get("/") {
             call.respond("hello I am test project")
         }
-        get("/hello") {
-            throw Exception("test")
-            call.respond("hello I am test project")
-        }
+
         post("/signup") {
 
-            val params = call.receiveParameters()
+            val params = call.parameters
             val username: String = params["username"].toString()
             val password: String = params["password"].toString()
             val fullName: String = params["fullName"].toString()
@@ -31,10 +27,11 @@ fun Application.configureRouting2() {
             when (val signUpResult =
                 userController.createUser(username, password, fullName, email)) {
                 is UserResult.Success -> {
-                    call.respond(HttpStatusCode.Accepted, signUpResult.value.message)
+                    call.respond(HttpStatusCode.Accepted, signUpResult.value.userSuccessType.message)
                 }
 
                 is UserResult.Error<*, *> -> {
+
                     signUpResult.exception.message?.let { message ->
                         call.respond(HttpStatusCode.BadRequest, message)
                     }
@@ -44,14 +41,14 @@ fun Application.configureRouting2() {
         }
 
         post("/login") {
-            val params = call.receiveParameters()
+            val params = call.parameters
             val username: String = params["username"].toString()
             val password: String = params["password"].toString()
 
             when (val loginResult =
                 userController.loginUser(username, password)) {
                 is UserResult.Success -> {
-                    call.respond(HttpStatusCode.Accepted, loginResult.value.message)
+                    call.respond(HttpStatusCode.Accepted, loginResult.value.userSuccessType.message)
                 }
 
                 is UserResult.Error<*, *> -> {
@@ -65,7 +62,7 @@ fun Application.configureRouting2() {
 
 
         post("/change-information") {
-            val params = call.receiveParameters()
+            val params = call.parameters
             val username = params["username"].toString()
             val fullName = params["fullName"].toString()
             val email = params["email"].toString()
@@ -73,7 +70,7 @@ fun Application.configureRouting2() {
             when (val changeInfoResult =
                 userController.changeInformation(username, fullName, email)) {
                 is UserResult.Success -> {
-                    call.respond(HttpStatusCode.Accepted, changeInfoResult.value.message)
+                    call.respond(HttpStatusCode.Accepted, changeInfoResult.value.userSuccessType.message)
                 }
 
                 is UserResult.Error<*, *> -> {
@@ -87,12 +84,12 @@ fun Application.configureRouting2() {
         }
 
         post("/delete-user") {
-            val params = call.receiveParameters()
+            val params = call.parameters
             val username: String = params["username"].toString()
 
             when (val deleteUserResult = userController.deleteUser(username)) {
                 is UserResult.Success -> {
-                    call.respond(HttpStatusCode.Accepted, deleteUserResult.value.message)
+                    call.respond(HttpStatusCode.Accepted, deleteUserResult.value.userSuccessType.message)
 
                 }
 
@@ -107,8 +104,9 @@ fun Application.configureRouting2() {
         }
 
         get("/users/{username}/{password}") {
-            val username = call.parameters["username"].toString()
-            val password = call.parameters["password"].toString()
+            val params = call.parameters
+            val username = params["username"].toString()
+            val password = params["password"].toString()
 
             when (val userGetInfoResult = userController.getInformation(username, password)) {
                 is UserResult.Success -> {
@@ -126,18 +124,6 @@ fun Application.configureRouting2() {
             }
         }
 
-        get("/users2/{username}/{password}") {
-            val username = call.parameters["username"].toString()
-            val password = call.parameters["password"].toString()
-            val userGetInfoResult = userController.getInformationEx(username, password)
-            if (userGetInfoResult == null) {
-                call.respond(HttpStatusCode.NotFound)
-            } else {
-
-                val userJson = UserJson.createJson(userGetInfoResult)
-                call.respond(HttpStatusCode.OK, userJson)
-            }
-        }
 
     }
 }

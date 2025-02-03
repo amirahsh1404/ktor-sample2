@@ -14,7 +14,7 @@ enum class UserExceptionType(val message: String) {
         var dynamicMessage = message
 
         args.forEach { (key, value) ->
-            dynamicMessage = message.replace("$key", value)
+            dynamicMessage = message.replace("{$key}", value)
         }
 
         return dynamicMessage

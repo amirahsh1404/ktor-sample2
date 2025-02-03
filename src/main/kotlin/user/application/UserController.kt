@@ -97,7 +97,7 @@ class UserController {
         }
     }
 
-    fun getInformationEx(username: String, password: String ): User? {
+    fun getInformationEx(username: String, password: String ): User {
             val usernameCheck = Username(username)
             val passwordCheck = Password(password)
 

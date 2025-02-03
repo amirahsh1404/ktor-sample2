@@ -1,12 +1,21 @@
 package user.domain.entity
 
-data class Username (val value: String){
+import user.infr.httpserver.model.ResultPackage.ValidationExceptions
+import user.infr.httpserver.model.ResultPackage.ValidationExceptionsType
+
+data class Username(val value: String) {
 
 
     init {
-        require(value.length >= 3) { "Username should be at least 3 characters" }
-        require(value.length <= 15) { "Username should be at most 15 characters" }
-        require(value.matches(Regex.username.toRegex())) { "Username contains illegal characters" }
+        require(value.length >= 3) {
+            throw ValidationExceptions(ValidationExceptionsType.USERNAME_IS_SHORT)
+        }
+        require(value.length <= 15) {
+            throw ValidationExceptions(ValidationExceptionsType.USERNAME_IS_LONG)
+        }
+        require(value.matches(Regex.username)) {
+            throw ValidationExceptions(ValidationExceptionsType.USERNAME_FORMAT_WRONG)
+        }
     }
 
 }
