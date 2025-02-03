@@ -67,3 +67,30 @@ Email(){
 
 
 
+crosscutting
+    Result
+    log
+    ContextHolder
+
+domain:
+    entity
+    vo
+    domainservice(bl)
+    usecase (flow)
+
+app
+    controller
+        uc.call
+        create cmd
+            check vo validarion
+
+
+infu
+    frameworks
+    repositoryImp
+    httpClient
+    httpserver
+
+
+aggregate
+

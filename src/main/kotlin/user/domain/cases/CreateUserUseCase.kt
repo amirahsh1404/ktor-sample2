@@ -36,3 +36,5 @@ data class CreateUserCmd(
     val fullName: FullName,
     val email: Email,
 )
+
+

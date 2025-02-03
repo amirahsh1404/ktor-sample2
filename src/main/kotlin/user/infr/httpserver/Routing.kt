@@ -81,6 +81,7 @@ fun Application.configureRouting2() {
 
                 is UserResult.Error<*, *> -> {
                     val exception = changeInfoResult.exception
+                    
                     val status = changeInfoResult.getStatusCode(exception)
                     val message = changeInfoResult.getMessage(exception)
 

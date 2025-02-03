@@ -14,7 +14,9 @@ sealed class UserResult<T> {
     data class Error<T, E : Exception>(val exception: E) : UserResult<T>()
 
     fun getStatusCode(exception: Exception): HttpStatusCode {
+
         return when (exception) {
+
             is UserExceptions -> {
                 exception.statusCode
             }
