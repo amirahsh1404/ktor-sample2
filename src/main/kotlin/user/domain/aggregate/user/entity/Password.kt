@@ -12,12 +12,10 @@ data class Password private constructor(val value: String) {
         require(value.length in 7..25) {
             "Password should be at least 7 characters and at most 25 characters"
         }
-        require(value.any {
-            it.isDigit() &&
-                    it.isLowerCase() &&
-                    it.isUpperCase() &&
-                    it.isLetterOrDigit()
-        })
+        require(value.any { it.isDigit() } &&
+                value.any { it.isUpperCase() } &&
+                value.any { it.isLowerCase() } &&
+                value.any { it.isLetterOrDigit()})
         {
             "Password format is wrong, your password most contains " +
                     "lower and upper case letters, number and special characters"
@@ -30,12 +28,10 @@ data class Password private constructor(val value: String) {
                 value.length !in 7..25 ->
                     UserResult.failure(Failure.InvalidPasswordLength())
 
-                !value.any {
-                    it.isDigit() &&
-                            it.isLowerCase() &&
-                            it.isUpperCase() &&
-                            it.isLetterOrDigit()
-                } ->
+                !value.any { it.isDigit() } ||
+                        !value.any { it.isUpperCase() } ||
+                        !value.any { it.isLowerCase() } ||
+                        !value.any { it.isLetterOrDigit()} ->
                     UserResult.failure(Failure.InvalidPasswordFormat())
 
                 else -> UserResult.success(Password(value))
