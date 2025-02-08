@@ -1,15 +1,23 @@
 package user.application
 
-import user.domain.UserRepo
-import user.domain.UserService
-import user.domain.cases.*
-import user.domain.entity.*
-import user.infr.httpserver.model.ResultPackage.UserResult
-import user.infr.httpserver.model.ResultPackage.UserSuccess
-import user.infr.httpserver.model.ResultPackage.UserSuccessType
+import user.application.failure.*
+import user.application.params.*
+import user.croscutting.ResultPackage.ResultFailure
+import user.croscutting.ResultPackage.UserResult
+import user.domain.aggregate.user.entity.*
+import user.domain.aggregate.user.model.cmd.ChangeInformationCmd
+import user.domain.aggregate.user.model.cmd.CreateUserCmd
+import user.domain.aggregate.user.model.cmd.DeleteUserCmd
+import user.domain.aggregate.user.model.cmd.LoginUserCmd
+import user.domain.aggregate.user.model.qry.GetInformationCmd
+import user.domain.aggregate.user.usecase.command.ChangeUserInformationUseCase
+import user.domain.aggregate.user.usecase.command.CreateUserUseCase
+import user.domain.aggregate.user.usecase.command.DeleteUserUseCase
+import user.domain.aggregate.user.usecase.command.LoginUserUseCase
+import user.domain.aggregate.user.usecase.query.GetInformationUseCase
+import user.domain.repository.UserRepo
+import user.domain.services.UserService
 import user.infr.repo.UserRepositoryImpl
-
-
 
 
 class UserController {
@@ -18,95 +26,142 @@ class UserController {
     private val userService: UserService = UserService(userRepo)
 
 
-    fun createUser(username: String, password: String, fullName: String, email: String): UserResult<UserSuccess> {
-        try {
-            val usernameCheck = Username(username)
-            val passwordCheck = Password(password)
-            val fullNameCheck = FullName(fullName)
-            val emailCheck = Email(email)
+    suspend fun createUser(params: CreateUserParams): UserResult<Unit, CreateUserFailure> {
 
-            val cmd = CreateUserCmd(usernameCheck, passwordCheck, fullNameCheck, emailCheck)
+        val usernameResult = Username.makeNew(params.username)
+        val passwordResult = Password.makeNew(params.password)
+        val fullNameResult = FullName.makeNew(params.fullName)
+        val emailResult = Email.makeNew(params.email)
 
-            val createUserUseCase = CreateUserUseCase(userService)
-            createUserUseCase.execute(cmd)
-            return UserResult.Success(UserSuccess(UserSuccessType.CREATE_SUCCESS))
-        } catch (e: Exception) {
-            return UserResult.Error(e)
+        val results = listOf(
+            usernameResult,
+            passwordResult,
+            fullNameResult,
+            emailResult
+        )
+
+        val failure = results.firstOrNull { it is UserResult.failure }
+        if (failure != null) {
+            return UserResult.failure(CreateUserFailure.InvalidParams((failure as UserResult.failure).failure.myFailure))
         }
+
+
+        val cmd = CreateUserCmd(
+            (usernameResult as UserResult.success).value,
+            (passwordResult as UserResult.success).value,
+            (fullNameResult as UserResult.success).value,
+            (emailResult as UserResult.success).value
+        )
+
+
+        val createUserUseCase = CreateUserUseCase(userService)
+        val createResult = createUserUseCase.execute(cmd)
+
+        if (createResult is UserResult.failure) {
+            return UserResult.failure(CreateUserFailure.RunTimeError(createResult.failure.myFailure))
+        }
+        return UserResult.success(Unit)
+
     }
 
-    fun loginUser(username: String, password: String): UserResult<UserSuccess> {
-        try {
-            val usernameCheck = Username(username)
-            val passwordCheck = Password(password)
+    fun loginUser(params: LoginUserParams): UserResult<Unit, ResultFailure> {
+        val usernameResult = Username.makeNew(params.username)
+        val passwordResult = Password.makeNew(params.password)
 
-            val cmd = LoginUserCmd(usernameCheck, passwordCheck)
+        val results = listOf(usernameResult, passwordResult)
 
-            val loginUserUseCase = LoginUserUseCase(userService)
-            loginUserUseCase.execute(cmd)
-
-            return UserResult.Success(UserSuccess(UserSuccessType.LOGIN_SUCCESS))
-        } catch (e: Exception) {
-            return UserResult.Error(e)
+        val failure = results.firstOrNull { it is UserResult.failure }
+        if (failure != null) {
+            return UserResult.failure(LoginUserFailure.InvalidParams((failure as UserResult.failure).failure.myFailure))
         }
+
+        val cmd = LoginUserCmd(
+            (usernameResult as UserResult.success).value,
+            (passwordResult as UserResult.success).value,
+        )
+
+        val loginUserUseCase = LoginUserUseCase(userService)
+        val loginResult = loginUserUseCase.execute(cmd)
+
+        if (loginResult is UserResult.failure) {
+            return UserResult.failure(LoginUserFailure.RunTimeError(loginResult.failure.myFailure))
+        }
+        return UserResult.success(Unit)
+
     }
 
-    fun changeInformation(username: String, fullName: String, email: String): UserResult<UserSuccess> {
-        try {
-            val usernameCheck = Username(username)
-            val fullNameCheck = FullName(fullName)
-            val emailCheck = Email(email)
+    fun changeInformation(params: ChangeInformationParams): UserResult<Unit, ResultFailure> {
+        val usernameResult: UserResult<Username, Username.Failure> = Username.makeNew(params.username)
+        val fullNameResult = FullName.makeNew(params.fullName)
+        val emailResult = Email.makeNew(params.email)
 
-            val cmd = ChangeInformationCmd(usernameCheck, fullNameCheck, emailCheck)
 
-            val changeUserInformationUseCase = ChangeUserInformationUseCase(userService)
-            changeUserInformationUseCase.execute(cmd)
-            return UserResult.Success(UserSuccess(UserSuccessType.CHANGE_INFO_SUCCESS))
-        } catch (e: Exception) {
-            return UserResult.Error(e)
+        val results = listOf(usernameResult, fullNameResult, emailResult)
+
+        val failure = results.firstOrNull { it is UserResult.failure }
+        if (failure != null) {
+            return UserResult.failure(ChangeInformationFailure.InvalidParams((failure as UserResult.failure).failure.myFailure))
         }
+
+        val cmd = ChangeInformationCmd(
+            (usernameResult as UserResult.success).value,
+            (fullNameResult as UserResult.success).value,
+            (emailResult as UserResult.success).value
+        )
+
+        val changeUserInformationUseCase = ChangeUserInformationUseCase(userService)
+        val changeInfoResult = changeUserInformationUseCase.execute(cmd)
+        if (changeInfoResult is UserResult.failure) {
+            return UserResult.failure(ChangeInformationFailure.RunTimeError(changeInfoResult.failure.myFailure))
+        }
+        return UserResult.success(Unit)
+
     }
 
-    fun deleteUser(username: String): UserResult<UserSuccess> {
-        try {
-            val usernameCheck = Username(username)
+    fun deleteUser(params: DeleteUserParams): UserResult<Unit, ResultFailure> {
+        val usernameResult = Username.makeNew(params.username)
 
-            val cmd = DeleteUserCmd(usernameCheck)
-
-            val deleteUserUseCase = DeleteUserUseCase(userService)
-            deleteUserUseCase.execute(cmd)
-
-
-            return UserResult.Success(UserSuccess(UserSuccessType.DELETE_SUCCESS))
-        } catch (e: Exception) {
-            return UserResult.Error(e)
+        if (usernameResult is UserResult.failure) {
+            val failure = usernameResult
+            return UserResult.failure(DeleteUserFailure.InvalidParams((failure as UserResult.failure).failure.myFailure))
         }
+
+        val cmd = DeleteUserCmd((usernameResult as UserResult.success).value)
+
+        val deleteUserUseCase = DeleteUserUseCase(userService)
+        val deleteResult = deleteUserUseCase.execute(cmd)
+
+        if (deleteResult is UserResult.failure) {
+            return UserResult.failure(DeleteUserFailure.RunTimeError(deleteResult.failure.myFailure))
+        }
+        return UserResult.success(Unit)
+
     }
 
-    fun getInformation(username: String, password: String ): UserResult<User> {
-        try {
-            val usernameCheck = Username(username)
-            val passwordCheck = Password(password)
+    fun getInformation(params: GetInformationParams): UserResult<User, ResultFailure> {
+        val usernameResult = Username.makeNew(params.username)
+        val passwordResult = Password.makeNew(params.password)
 
-            val cmd = GetInformationCmd(usernameCheck, passwordCheck)
+        val results = listOf(usernameResult, passwordResult)
 
-            val getInformationUseCase = GetInformationUseCase(userService)
-            return UserResult.Success(getInformationUseCase.execute(cmd))
+        val failure = results.firstOrNull { it is UserResult.failure }
 
-
-        } catch (e: Exception) {
-            return UserResult.Error(e)
+        if (failure != null) {
+            return UserResult.failure(GetInformationFailure.InvalidParams((failure as UserResult.failure).failure.myFailure))
         }
-    }
 
-    fun getInformationEx(username: String, password: String ): User {
-            val usernameCheck = Username(username)
-            val passwordCheck = Password(password)
+        val cmd = GetInformationCmd(
+            (usernameResult as UserResult.success).value,
+            (passwordResult as UserResult.success).value,
+        )
 
-            val cmd = GetInformationCmd(usernameCheck, passwordCheck)
+        val getInformationUseCase = GetInformationUseCase(userService)
 
-            val getInformationUseCase = GetInformationUseCase(userService)
-            return getInformationUseCase.execute(cmd)
+        val getInformationResult = getInformationUseCase.execute(cmd)
+        if (getInformationResult is UserResult.failure) {
+            return UserResult.failure(GetInformationFailure.RunTimeError(getInformationResult.failure.myFailure))
+        }
+        return UserResult.success((getInformationResult as UserResult.success).value)
 
     }
 

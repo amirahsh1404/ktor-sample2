@@ -3,11 +3,11 @@ package user.infr.repo
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
-import user.domain.UserRepo
-import user.domain.entity.Email
-import user.domain.entity.FullName
-import user.domain.entity.User
-import user.domain.entity.Username
+import user.domain.repository.UserRepo
+import user.domain.aggregate.user.entity.Email
+import user.domain.aggregate.user.entity.FullName
+import user.domain.aggregate.user.entity.User
+import user.domain.aggregate.user.entity.Username
 import user.infr.repo.pm.UserTable
 
 class UserRepositoryImpl : UserRepo {
@@ -38,7 +38,7 @@ class UserRepositoryImpl : UserRepo {
         )
     }
 
-    override fun saveUser(user: user.domain.entity.User): Boolean {
+    override fun saveUser(user: User): Boolean {
         transaction {
             UserTable.insert {
                 it[username] = user.username.value

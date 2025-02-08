@@ -5,7 +5,9 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import user.application.UserController
-import user.infr.httpserver.model.ResultPackage.UserResult
+import user.application.params.*
+import user.croscutting.ResultPackage.UserResult
+import user.domain.aggregate.user.entity.User
 import user.infr.httpserver.model.UserJson
 
 fun Application.configureRouting2() {
@@ -24,20 +26,20 @@ fun Application.configureRouting2() {
             val fullName: String = params["fullName"].toString()
             val email: String = params["email"].toString()
 
+
             when (val signUpResult =
-                userController.createUser(username, password, fullName, email)) {
-                is UserResult.Success -> {
-                    call.respond(signUpResult.value.userSuccessType.statusCode,
-                        signUpResult.value.userSuccessType.message)
+                userController.createUser(params = CreateUserParams(username, password, fullName, email))) {
+                is UserResult.success<*, *> -> {
+                    call.respond(HttpStatusCode.Created,"User Created Successfully")
                 }
 
-                is UserResult.Error<* , *> -> {
-                    val exception = signUpResult.exception
+                is UserResult.failure<* , *> -> {
+                    val failure = signUpResult.failure.myFailure
 
-                    val status = signUpResult.getStatusCode(exception)
-                    val message = signUpResult.getMessage(exception)
+                    val status = failure.statusCode
+                    val message = failure.message
 
-                    message?.let { call.respond(status, message) }
+                    call.respond(status, message)
 
                 }
             }
@@ -50,17 +52,17 @@ fun Application.configureRouting2() {
             val password: String = params["password"].toString()
 
             when (val loginResult =
-                userController.loginUser(username, password)) {
-                is UserResult.Success -> {
-                    call.respond(HttpStatusCode.Accepted, loginResult.value.userSuccessType.message)
+                userController.loginUser(params = LoginUserParams(username, password))) {
+                is UserResult.success<*, *> -> {
+                    call.respond(HttpStatusCode.Accepted, "User logged in successfully")
                 }
 
-                is UserResult.Error<*, *> -> {
-                    val exception = loginResult.exception
-                    val status = loginResult.getStatusCode(exception)
-                    val message = loginResult.getMessage(exception)
+                is UserResult.failure<*, *> -> {
+                    val failure = loginResult.failure.myFailure
+                    val status = failure.statusCode
+                    val message = failure.message
 
-                    message?.let { call.respond(status, message) }
+                    call.respond(status, message)
                 }
             }
 
@@ -74,18 +76,18 @@ fun Application.configureRouting2() {
             val email = params["email"].toString()
 
             when (val changeInfoResult =
-                userController.changeInformation(username, fullName, email)) {
-                is UserResult.Success -> {
-                    call.respond(HttpStatusCode.Accepted, changeInfoResult.value.userSuccessType.message)
+                userController.changeInformation(params = ChangeInformationParams(username, fullName, email))) {
+                is UserResult.success<*, *> -> {
+                    call.respond(HttpStatusCode.Accepted, "Changed Info Successfully")
                 }
 
-                is UserResult.Error<*, *> -> {
-                    val exception = changeInfoResult.exception
-                    
-                    val status = changeInfoResult.getStatusCode(exception)
-                    val message = changeInfoResult.getMessage(exception)
+                is UserResult.failure<*, *> -> {
+                    val failure = changeInfoResult.failure.myFailure
 
-                    message?.let { call.respond(status, message) }
+                    val status = failure.statusCode
+                    val message = failure.message
+
+                    call.respond(status, message)
                 }
             }
 
@@ -96,18 +98,19 @@ fun Application.configureRouting2() {
             val params = call.parameters
             val username: String = params["username"].toString()
 
-            when (val deleteUserResult = userController.deleteUser(username)) {
-                is UserResult.Success -> {
-                    call.respond(HttpStatusCode.Accepted, deleteUserResult.value.userSuccessType.message)
+            when (val deleteUserResult = userController.deleteUser(DeleteUserParams(username))) {
+                is UserResult.success<*, *> -> {
+                    call.respond(HttpStatusCode.Accepted, "user deleted successfully")
 
                 }
 
-                is UserResult.Error<*, *> -> {
-                    val exception = deleteUserResult.exception
-                    val status = deleteUserResult.getStatusCode(exception)
-                    val message = deleteUserResult.getMessage(exception)
+                is UserResult.failure<*, *> -> {
+                    val failure = deleteUserResult.failure.myFailure
 
-                    message?.let { call.respond(status, message) }
+                    val status = failure.statusCode
+                    val message = failure.message
+
+                    call.respond(status, message)
                 }
             }
 
@@ -119,18 +122,19 @@ fun Application.configureRouting2() {
             val username = params["username"].toString()
             val password = params["password"].toString()
 
-            when (val userGetInfoResult = userController.getInformation(username, password)) {
-                is UserResult.Success -> {
-                    val userJson = UserJson.createJson(userGetInfoResult.value)
+            when (val userGetInfoResult = userController.getInformation(GetInformationParams(username, password))) {
+                is UserResult.success<*, *> -> {
+                    val userJson = UserJson.createJson(userGetInfoResult.value as User)
                     call.respond(HttpStatusCode.OK, userJson)
                 }
 
-                is UserResult.Error<*, *> -> {
-                    val exception = userGetInfoResult.exception
-                    val status = userGetInfoResult.getStatusCode(exception)
-                    val message = userGetInfoResult.getMessage(exception)
+                is UserResult.failure<*, *> -> {
+                    val failure = userGetInfoResult.failure.myFailure
 
-                    message?.let { call.respond(status, message) }
+                    val status = failure.statusCode
+                    val message = failure.message
+
+                    call.respond(status, message)
                 }
 
 

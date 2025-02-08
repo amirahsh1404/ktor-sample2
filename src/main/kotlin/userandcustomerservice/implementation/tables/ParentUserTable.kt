@@ -1,12 +1,8 @@
 package userandcustomerservice.implementation.tables
 
-import UsersTable.insert
-import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import userandcustomerservice.business.dataclasses.ParentUser
-import kotlin.text.insert
 
 
 object ParentUserTable : Table("parentuser") {

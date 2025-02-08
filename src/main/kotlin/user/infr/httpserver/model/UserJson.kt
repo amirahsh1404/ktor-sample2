@@ -3,7 +3,7 @@ package user.infr.httpserver.model
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import user.domain.entity.User
+import user.domain.aggregate.user.entity.User
 
 @Serializable
 class UserJson (
