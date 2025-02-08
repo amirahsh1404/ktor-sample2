@@ -4,6 +4,7 @@ import user.application.failure.*
 import user.application.params.*
 import user.croscutting.ResultPackage.ResultFailure
 import user.croscutting.ResultPackage.UserResult
+import user.domain.aggregate.user.User
 import user.domain.aggregate.user.entity.*
 import user.domain.aggregate.user.model.cmd.ChangeInformationCmd
 import user.domain.aggregate.user.model.cmd.CreateUserCmd

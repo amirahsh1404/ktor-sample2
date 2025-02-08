@@ -5,7 +5,7 @@ import user.croscutting.ResultPackage.MyFailure
 import user.croscutting.ResultPackage.ResultFailure
 import user.croscutting.ResultPackage.UserResult
 import user.domain.aggregate.user.entity.Password
-import user.domain.aggregate.user.entity.User
+import user.domain.aggregate.user.User
 import user.domain.aggregate.user.entity.Username
 import user.domain.aggregate.user.model.qry.GetInformationCmd
 import user.domain.services.UserService

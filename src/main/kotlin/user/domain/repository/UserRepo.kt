@@ -2,7 +2,7 @@ package user.domain.repository
 
 import user.domain.aggregate.user.entity.Email
 import user.domain.aggregate.user.entity.FullName
-import user.domain.aggregate.user.entity.User
+import user.domain.aggregate.user.User
 import user.domain.aggregate.user.entity.Username
 
 

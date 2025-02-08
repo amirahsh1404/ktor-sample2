@@ -1,5 +1,6 @@
 package user.domain.services
 
+import user.domain.aggregate.user.User
 import user.domain.aggregate.user.entity.*
 import user.domain.repository.UserRepo
 

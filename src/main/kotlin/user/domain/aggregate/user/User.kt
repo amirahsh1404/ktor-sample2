@@ -1,4 +1,9 @@
-package user.domain.aggregate.user.entity
+package user.domain.aggregate.user
+
+import user.domain.aggregate.user.entity.Email
+import user.domain.aggregate.user.entity.FullName
+import user.domain.aggregate.user.entity.Password
+import user.domain.aggregate.user.entity.Username
 
 data class User private constructor(
     val username: Username,

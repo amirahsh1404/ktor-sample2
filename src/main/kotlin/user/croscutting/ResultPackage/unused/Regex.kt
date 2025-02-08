@@ -1,4 +1,4 @@
-package user.domain.aggregate.user.entity
+package user.croscutting.ResultPackage.unused
 
 data object Regex {
     val username = "[a-zA-Z0-9-_]+".toRegex()

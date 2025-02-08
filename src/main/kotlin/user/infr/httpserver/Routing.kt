@@ -7,7 +7,7 @@ import io.ktor.server.routing.*
 import user.application.UserController
 import user.application.params.*
 import user.croscutting.ResultPackage.UserResult
-import user.domain.aggregate.user.entity.User
+import user.domain.aggregate.user.User
 import user.infr.httpserver.model.UserJson
 
 fun Application.configureRouting2() {
