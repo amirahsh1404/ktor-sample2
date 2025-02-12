@@ -1,6 +1,5 @@
 package user.domain.aggregate.user.entity
 
-import io.ktor.http.*
 import user.croscutting.ResultPackage.MyFailure
 import user.croscutting.ResultPackage.ResultFailure
 import user.croscutting.ResultPackage.UserResult
@@ -21,10 +20,10 @@ data class Email private constructor(val value: String) {
         fun makeNew(value: String): UserResult<Email, Failure> {
             return when {
                 value.length !in 5..100 ->
-                    UserResult.failure(Failure.InvalidEmailLength())
+                    UserResult.failure(Failure.InvalidEmailLengthFailure(email = value))
 
                 !value.matches("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]+".toRegex()) ->
-                    UserResult.failure(Failure.InvalidEmailFormat())
+                    UserResult.failure(Failure.InvalidEmailFormatFailure(email = value))
 
                 else -> UserResult.success(Email(value))
             }
@@ -36,10 +35,10 @@ data class Email private constructor(val value: String) {
     }
 
     sealed class Failure(failure: MyFailure) : ResultFailure(failure) {
-        class InvalidEmailLength :
+        class InvalidEmailLengthFailure(email : String) :
             Failure(
-                MyFailure("Email should be at least 5 characters and at most 100 characters", HttpStatusCode.NotAcceptable))
+                MyFailure("InvalidEmailLength",email))
 
-        class InvalidEmailFormat : Failure(MyFailure("Email format is invalid", HttpStatusCode.NotAcceptable))
+        class InvalidEmailFormatFailure(email: String) : Failure(MyFailure("InvalidEmailFormat",email))
     }
 }

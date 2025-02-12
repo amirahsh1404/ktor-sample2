@@ -4,7 +4,7 @@ import user.croscutting.ResultPackage.MyFailure
 import user.croscutting.ResultPackage.ResultFailure
 
 sealed class LoginUserFailure(failure : MyFailure) : ResultFailure(failure) {
-    class InvalidParams(failure: MyFailure) : LoginUserFailure(failure)
-    class RunTimeError(failure: MyFailure) : CreateUserFailure(failure)
-
+    class InvalidParamsFailure : LoginUserFailure(MyFailure("InvalidParams"))
+    class UserNotFound(cause : MyFailure) : LoginUserFailure(MyFailure("UserNotFound",cause))
+    class PasswordWrongFailure(cause: MyFailure) : LoginUserFailure(MyFailure("PasswordWrong",cause))
 }

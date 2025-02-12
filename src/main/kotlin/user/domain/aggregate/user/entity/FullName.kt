@@ -1,6 +1,5 @@
 package user.domain.aggregate.user.entity
 
-import io.ktor.http.*
 import user.croscutting.ResultPackage.MyFailure
 import user.croscutting.ResultPackage.ResultFailure
 import user.croscutting.ResultPackage.UserResult
@@ -16,10 +15,10 @@ data class FullName private constructor(val value: String) {
         fun makeNew(value: String): UserResult<FullName, Failure> {
             return when {
                 value.length !in 3..20 ->
-                    UserResult.failure(Failure.InvalidFullNameLength())
+                    UserResult.failure(Failure.InvalidFullNameLengthFailure(fullName = value))
 
                 !value.matches("[a-zA-Z]+".toRegex()) ->
-                    UserResult.failure(Failure.InvalidFullNameFormat())
+                    UserResult.failure(Failure.InvalidFullNameFormatFailure(fullName = value))
 
                 else -> UserResult.success(FullName(value))
             }
@@ -31,9 +30,9 @@ data class FullName private constructor(val value: String) {
     }
 
     sealed class Failure(failure: MyFailure) : ResultFailure(failure) {
-        class InvalidFullNameLength :
-            Failure(MyFailure("FullName should be at least 3 characters and at most 20 characters", HttpStatusCode.NotAcceptable))
+        class InvalidFullNameLengthFailure(fullName: String) :
+            Failure(MyFailure("InvalidFullNameLength",fullName))
 
-        class InvalidFullNameFormat : Failure(MyFailure("FullName format is invalid", HttpStatusCode.NotAcceptable))
+        class InvalidFullNameFormatFailure(fullName: String) : Failure(MyFailure("InvalidFullNameFormat",fullName))
     }
 }

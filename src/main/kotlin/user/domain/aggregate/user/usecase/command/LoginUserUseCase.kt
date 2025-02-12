@@ -1,6 +1,5 @@
 package user.domain.aggregate.user.usecase.command
 
-import io.ktor.http.*
 import user.croscutting.ResultPackage.MyFailure
 import user.croscutting.ResultPackage.ResultFailure
 import user.croscutting.ResultPackage.UserResult
@@ -15,11 +14,11 @@ class LoginUserUseCase(private val userService: UserService) {
 
         val userExists = userService.exists(cmd.username)
         if (!userExists) {
-            return UserResult.failure(Failure.UserDoesNotExist(cmd.username))
+            return UserResult.failure(Failure.UserNotFoundFailure(cmd.username))
         }
 
         if (!userService.passwordIsCorrect(cmd.username, cmd.password)) {
-            return UserResult.failure(Failure.PasswordWrong(cmd.password))
+            return UserResult.failure(Failure.PasswordWrongFailure(cmd.password))
         }
 
         //TODO : with any logic we have userService.login(username, password)
@@ -29,11 +28,11 @@ class LoginUserUseCase(private val userService: UserService) {
     }
 
     sealed class Failure(failure: MyFailure) : ResultFailure(failure) {
-        class UserDoesNotExist(username: Username) :
-            Failure(MyFailure("User With This Username Does Not Exists", HttpStatusCode.BadRequest,username.value))
+        class UserNotFoundFailure(username: Username) :
+            Failure(MyFailure("UserNotFound",username.value))
 
-        class PasswordWrong(password: Password) :
-            Failure(MyFailure("password is wrong", HttpStatusCode.BadRequest, password.value))
+        class PasswordWrongFailure(password: Password) :
+            Failure(MyFailure("PasswordWrong", password.value))
     }
 
 }

@@ -1,6 +1,5 @@
 package user.domain.aggregate.user.entity
 
-import io.ktor.http.HttpStatusCode.Companion.NotAcceptable
 import user.croscutting.ResultPackage.MyFailure
 import user.croscutting.ResultPackage.ResultFailure
 import user.croscutting.ResultPackage.UserResult
@@ -26,13 +25,13 @@ data class Password private constructor(val value: String) {
         fun makeNew(value: String): UserResult<Password, Failure> {
             return when {
                 value.length !in 7..25 ->
-                    UserResult.failure(Failure.InvalidPasswordLength())
+                    UserResult.failure(Failure.InvalidPasswordLengthFailure(password = value))
 
                 !value.any { it.isDigit() } ||
                         !value.any { it.isUpperCase() } ||
                         !value.any { it.isLowerCase() } ||
                         !value.any { it.isLetterOrDigit()} ->
-                    UserResult.failure(Failure.InvalidPasswordFormat())
+                    UserResult.failure(Failure.InvalidPasswordFormatFailure(password = value))
 
                 else -> UserResult.success(Password(value))
             }
@@ -44,14 +43,12 @@ data class Password private constructor(val value: String) {
     }
 
     sealed class Failure(failure: MyFailure) : ResultFailure(failure) {
-        class InvalidPasswordLength :
-            Failure(MyFailure("Password should be at least 7 characters", NotAcceptable))
+        class InvalidPasswordLengthFailure(password: String) :
+            Failure(MyFailure("InvalidPasswordLength",password))
 
-        class InvalidPasswordFormat : Failure(
+        class InvalidPasswordFormatFailure(password: String) : Failure(
             MyFailure(
-                "Password format is wrong, your password most contains " +
-                        "lower and upper case letters, number and special characters"
-            , NotAcceptable)
+                "InvalidPasswordFormat",password)
         )
     }
 

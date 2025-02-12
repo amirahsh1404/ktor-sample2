@@ -1,6 +1,5 @@
 package user.domain.aggregate.user.usecase.command
 
-import io.ktor.http.*
 import user.croscutting.ResultPackage.MyFailure
 import user.croscutting.ResultPackage.ResultFailure
 import user.croscutting.ResultPackage.UserResult
@@ -14,7 +13,7 @@ class DeleteUserUseCase(private val userService: UserService) {
 
         val userExists = userService.exists(cmd.username)
         if (!userExists) {
-            return UserResult.failure(Failure.UserDoesNotExist(cmd.username))
+            return UserResult.failure(Failure.UserDoesNotExistFailure(cmd.username))
         }
 
         userService.deleteUser(cmd.username)
@@ -23,8 +22,8 @@ class DeleteUserUseCase(private val userService: UserService) {
     }
 
     sealed class Failure(failure: MyFailure) : ResultFailure(failure) {
-        class UserDoesNotExist(username: Username) :
-            Failure(MyFailure("User With This Username Does Not Exists", HttpStatusCode.BadRequest, username.value))
+        class UserDoesNotExistFailure(username: Username) :
+            Failure(MyFailure("UserNotFound", username.value))
     }
 
 }

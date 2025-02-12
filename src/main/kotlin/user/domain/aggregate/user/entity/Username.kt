@@ -1,6 +1,5 @@
 package user.domain.aggregate.user.entity
 
-import io.ktor.http.*
 import user.croscutting.ResultPackage.MyFailure
 import user.croscutting.ResultPackage.ResultFailure
 import user.croscutting.ResultPackage.UserResult
@@ -23,10 +22,10 @@ data class Username private constructor(val value: String) {
         fun makeNew(value: String): UserResult<Username, Failure> {
             return when {
                 value.length !in 3..15 ->
-                    UserResult.failure(Failure.InvalidUsernameLength())
+                    UserResult.failure(Failure.InvalidUsernameLengthFailure(username = value))
 
                 !value.matches("[a-zA-Z0-9-_]+".toRegex()) ->
-                    UserResult.failure(Failure.InvalidUsernameFormat())
+                    UserResult.failure(Failure.InvalidUsernameFormatFailure(username = value))
 
                 else -> UserResult.success(Username(value))
             }
@@ -38,20 +37,16 @@ data class Username private constructor(val value: String) {
     }
 
     sealed class Failure(failure: MyFailure) : ResultFailure(failure) {
-        class InvalidUsernameLength :
+        class InvalidUsernameLengthFailure(username: String) :
             Failure(
-                MyFailure(
-                    "Username should be at least 3 characters and at most 15 characters",
-                    HttpStatusCode.NotAcceptable
-                )
+                MyFailure("InvalidUsernameLength", username)
             )
 
-        class InvalidUsernameFormat : Failure(
-            MyFailure(
-                "Username contains illegal characters, " +
-                        "username can only contains words, numbers and _", HttpStatusCode.NotAcceptable
-            )
+
+        class InvalidUsernameFormatFailure(username: String) : Failure(
+            MyFailure("InvalidUsernameFormat", username)
         )
+
     }
 
 

@@ -5,7 +5,10 @@ import user.application.params.*
 import user.croscutting.ResultPackage.ResultFailure
 import user.croscutting.ResultPackage.UserResult
 import user.domain.aggregate.user.User
-import user.domain.aggregate.user.entity.*
+import user.domain.aggregate.user.entity.Email
+import user.domain.aggregate.user.entity.FullName
+import user.domain.aggregate.user.entity.Password
+import user.domain.aggregate.user.entity.Username
 import user.domain.aggregate.user.model.cmd.ChangeInformationCmd
 import user.domain.aggregate.user.model.cmd.CreateUserCmd
 import user.domain.aggregate.user.model.cmd.DeleteUserCmd
@@ -41,9 +44,11 @@ class UserController {
             emailResult
         )
 
-        val failure = results.firstOrNull { it is UserResult.failure }
-        if (failure != null) {
-            return UserResult.failure(CreateUserFailure.InvalidParams((failure as UserResult.failure).failure.myFailure))
+        val firstFailure = results.firstOrNull { it is UserResult.failure }
+        if (firstFailure != null) {
+            val failure = CreateUserFailure.InvalidParamsFailure()
+            failure.myFailure.addCause((firstFailure as UserResult.failure).failure.myFailure)
+            return UserResult.failure(failure)
         }
 
 
@@ -59,10 +64,14 @@ class UserController {
         val createResult = createUserUseCase.execute(cmd)
 
         if (createResult is UserResult.failure) {
-            return UserResult.failure(CreateUserFailure.RunTimeError(createResult.failure.myFailure))
+            val failure: CreateUserFailure
+            when (val cause = createResult.failure) {
+                is CreateUserUseCase.Failure.UserExistFailure -> failure = CreateUserFailure.UserExistsFailure(cause.myFailure)
+                else -> failure = CreateUserFailure.EmailExistsFailure(cause.myFailure)
+            }
+            return UserResult.failure(failure)
         }
         return UserResult.success(Unit)
-
     }
 
     fun loginUser(params: LoginUserParams): UserResult<Unit, ResultFailure> {
@@ -71,9 +80,11 @@ class UserController {
 
         val results = listOf(usernameResult, passwordResult)
 
-        val failure = results.firstOrNull { it is UserResult.failure }
-        if (failure != null) {
-            return UserResult.failure(LoginUserFailure.InvalidParams((failure as UserResult.failure).failure.myFailure))
+        val firstFailure = results.firstOrNull { it is UserResult.failure }
+        if (firstFailure != null) {
+            val failure = CreateUserFailure.InvalidParamsFailure()
+            failure.myFailure.addCause((firstFailure as UserResult.failure).failure.myFailure)
+            return UserResult.failure(failure)
         }
 
         val cmd = LoginUserCmd(
@@ -85,7 +96,12 @@ class UserController {
         val loginResult = loginUserUseCase.execute(cmd)
 
         if (loginResult is UserResult.failure) {
-            return UserResult.failure(LoginUserFailure.RunTimeError(loginResult.failure.myFailure))
+            val failure: LoginUserFailure
+            when (val cause = loginResult.failure) {
+                is LoginUserUseCase.Failure.UserNotFoundFailure -> failure = LoginUserFailure.UserNotFound(cause.myFailure)
+                else -> failure = LoginUserFailure.PasswordWrongFailure(cause.myFailure)
+            }
+            return UserResult.failure(failure)
         }
         return UserResult.success(Unit)
 
@@ -99,9 +115,11 @@ class UserController {
 
         val results = listOf(usernameResult, fullNameResult, emailResult)
 
-        val failure = results.firstOrNull { it is UserResult.failure }
-        if (failure != null) {
-            return UserResult.failure(ChangeInformationFailure.InvalidParams((failure as UserResult.failure).failure.myFailure))
+        val firstFailure = results.firstOrNull { it is UserResult.failure }
+        if (firstFailure != null) {
+            val failure = CreateUserFailure.InvalidParamsFailure()
+            failure.myFailure.addCause((firstFailure as UserResult.failure).failure.myFailure)
+            return UserResult.failure(failure)
         }
 
         val cmd = ChangeInformationCmd(
@@ -113,7 +131,15 @@ class UserController {
         val changeUserInformationUseCase = ChangeUserInformationUseCase(userService)
         val changeInfoResult = changeUserInformationUseCase.execute(cmd)
         if (changeInfoResult is UserResult.failure) {
-            return UserResult.failure(ChangeInformationFailure.RunTimeError(changeInfoResult.failure.myFailure))
+            val failure: ChangeInformationFailure
+            when (val cause = changeInfoResult.failure) {
+                is ChangeUserInformationUseCase.Failure.UserNotFoundFailure -> failure =
+                    ChangeInformationFailure.UserNotFoundFailure(cause.myFailure)
+                else -> failure =
+                    ChangeInformationFailure.EmailExistsFailure(cause.myFailure)
+
+            }
+            return UserResult.failure(failure)
         }
         return UserResult.success(Unit)
 
@@ -123,8 +149,9 @@ class UserController {
         val usernameResult = Username.makeNew(params.username)
 
         if (usernameResult is UserResult.failure) {
-            val failure = usernameResult
-            return UserResult.failure(DeleteUserFailure.InvalidParams((failure as UserResult.failure).failure.myFailure))
+            val failure = DeleteUserFailure.InvalidParamsFailure()
+            failure.myFailure.addCause(usernameResult.failure.myFailure)
+            return UserResult.failure(failure)
         }
 
         val cmd = DeleteUserCmd((usernameResult as UserResult.success).value)
@@ -133,7 +160,11 @@ class UserController {
         val deleteResult = deleteUserUseCase.execute(cmd)
 
         if (deleteResult is UserResult.failure) {
-            return UserResult.failure(DeleteUserFailure.RunTimeError(deleteResult.failure.myFailure))
+            val failure: DeleteUserFailure
+            when (val cause = deleteResult.failure) {
+                else -> failure = DeleteUserFailure.UserNotFoundFailure(cause.myFailure)
+            }
+            return UserResult.failure(failure)
         }
         return UserResult.success(Unit)
 
@@ -145,10 +176,11 @@ class UserController {
 
         val results = listOf(usernameResult, passwordResult)
 
-        val failure = results.firstOrNull { it is UserResult.failure }
-
-        if (failure != null) {
-            return UserResult.failure(GetInformationFailure.InvalidParams((failure as UserResult.failure).failure.myFailure))
+        val firstFailure = results.firstOrNull { it is UserResult.failure }
+        if (firstFailure != null) {
+            val failure = CreateUserFailure.InvalidParamsFailure()
+            failure.myFailure.addCause((firstFailure as UserResult.failure).failure.myFailure)
+            return UserResult.failure(failure)
         }
 
         val cmd = GetInformationCmd(
@@ -160,8 +192,12 @@ class UserController {
 
         val getInformationResult = getInformationUseCase.execute(cmd)
         if (getInformationResult is UserResult.failure) {
-            return UserResult.failure(GetInformationFailure.RunTimeError(getInformationResult.failure.myFailure))
-        }
+            val failure: GetInformationFailure
+            when (val cause = getInformationResult.failure) {
+                is GetInformationUseCase.Failure.UserNotFoundFailure -> failure = GetInformationFailure.UserNotFound(cause.myFailure)
+                else -> failure = GetInformationFailure.PasswordWrongFailure(cause.myFailure)
+            }
+            return UserResult.failure(failure)        }
         return UserResult.success((getInformationResult as UserResult.success).value)
 
     }

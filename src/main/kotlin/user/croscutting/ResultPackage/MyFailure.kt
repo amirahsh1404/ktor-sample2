@@ -1,12 +1,20 @@
 package user.croscutting.ResultPackage
 
-import io.ktor.http.*
-
 class MyFailure(
-    val message: String = "Unknown error occurred",
-    val statusCode : HttpStatusCode,
-    val cause : String = ""
+    val code: String,
+    val value: String?,
+    var cause : MyFailure?
 ) {
-    constructor(message: String , statusCode: HttpStatusCode) : this(
-        message = message, statusCode = statusCode, cause = "")
+    constructor(code: String, value : String) : this(
+        code = code, value =value , cause = null)
+    constructor(code: String, cause: MyFailure) : this(
+        code = code, value = "", cause = cause
+    )
+    constructor(code: String,) : this(
+        code = code, value = "", cause = null
+    )
+
+    fun addCause(cause: MyFailure) {
+        this.cause = cause
+    }
 }
