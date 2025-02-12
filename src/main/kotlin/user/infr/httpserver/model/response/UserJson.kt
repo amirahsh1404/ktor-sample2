@@ -1,9 +1,9 @@
-package user.infr.httpserver.model
+package user.infr.httpserver.model.response
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import user.domain.aggregate.user.User
+import user.domain.aggregate.user.entity.User
 
 @Serializable
 class UserJson (

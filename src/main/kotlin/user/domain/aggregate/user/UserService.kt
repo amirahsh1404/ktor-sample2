@@ -1,7 +1,10 @@
-package user.domain.services
+package user.domain.aggregate.user
 
-import user.domain.aggregate.user.User
-import user.domain.aggregate.user.entity.*
+import user.domain.aggregate.user.entity.User
+import user.domain.aggregate.user.entity.valueObjects.Email
+import user.domain.aggregate.user.entity.valueObjects.FullName
+import user.domain.aggregate.user.entity.valueObjects.Password
+import user.domain.aggregate.user.entity.valueObjects.Username
 import user.domain.repository.UserRepo
 
 

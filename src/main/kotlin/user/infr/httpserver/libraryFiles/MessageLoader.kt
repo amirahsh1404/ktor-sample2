@@ -3,7 +3,7 @@ package user.infr.httpserver.libraryFiles
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import user.croscutting.ResultPackage.MyFailure
-import user.infr.httpserver.model.HttpResponse
+import user.infr.httpserver.model.response.HttpResponse
 
 object MessageLoader {
 

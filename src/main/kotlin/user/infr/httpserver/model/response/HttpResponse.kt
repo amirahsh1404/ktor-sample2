@@ -1,4 +1,4 @@
-package user.infr.httpserver.model
+package user.infr.httpserver.model.response
 
 import kotlinx.serialization.Serializable
 

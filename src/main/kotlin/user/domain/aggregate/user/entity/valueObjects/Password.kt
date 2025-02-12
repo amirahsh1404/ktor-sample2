@@ -1,4 +1,4 @@
-package user.domain.aggregate.user.entity
+package user.domain.aggregate.user.entity.valueObjects
 
 import user.croscutting.ResultPackage.MyFailure
 import user.croscutting.ResultPackage.ResultFailure

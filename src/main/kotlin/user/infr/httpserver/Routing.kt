@@ -8,9 +8,9 @@ import user.application.UserController
 import user.application.failure.*
 import user.application.params.*
 import user.croscutting.ResultPackage.UserResult
-import user.domain.aggregate.user.User
+import user.domain.aggregate.user.entity.User
 import user.infr.httpserver.libraryFiles.MessageLoader
-import user.infr.httpserver.model.UserJson
+import user.infr.httpserver.model.response.UserJson
 
 fun Application.configureRouting2() {
     val userController = UserController()

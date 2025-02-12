@@ -3,11 +3,11 @@ package user.domain.aggregate.user.usecase.command
 import user.croscutting.ResultPackage.MyFailure
 import user.croscutting.ResultPackage.ResultFailure
 import user.croscutting.ResultPackage.UserResult
-import user.domain.aggregate.user.User
-import user.domain.aggregate.user.entity.Email
-import user.domain.aggregate.user.entity.Username
+import user.domain.aggregate.user.entity.User
+import user.domain.aggregate.user.entity.valueObjects.Email
+import user.domain.aggregate.user.entity.valueObjects.Username
 import user.domain.aggregate.user.model.cmd.CreateUserCmd
-import user.domain.services.UserService
+import user.domain.aggregate.user.UserService
 
 class CreateUserUseCase(private val userService: UserService) {
 

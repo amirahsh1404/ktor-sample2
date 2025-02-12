@@ -3,11 +3,11 @@ package user.domain.aggregate.user.usecase.query
 import user.croscutting.ResultPackage.MyFailure
 import user.croscutting.ResultPackage.ResultFailure
 import user.croscutting.ResultPackage.UserResult
-import user.domain.aggregate.user.User
-import user.domain.aggregate.user.entity.Password
-import user.domain.aggregate.user.entity.Username
+import user.domain.aggregate.user.entity.User
+import user.domain.aggregate.user.entity.valueObjects.Password
+import user.domain.aggregate.user.entity.valueObjects.Username
 import user.domain.aggregate.user.model.qry.GetInformationCmd
-import user.domain.services.UserService
+import user.domain.aggregate.user.UserService
 
 class GetInformationUseCase(val userService: UserService) {
 

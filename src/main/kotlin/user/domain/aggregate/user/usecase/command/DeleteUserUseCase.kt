@@ -3,9 +3,9 @@ package user.domain.aggregate.user.usecase.command
 import user.croscutting.ResultPackage.MyFailure
 import user.croscutting.ResultPackage.ResultFailure
 import user.croscutting.ResultPackage.UserResult
-import user.domain.aggregate.user.entity.Username
+import user.domain.aggregate.user.entity.valueObjects.Username
 import user.domain.aggregate.user.model.cmd.DeleteUserCmd
-import user.domain.services.UserService
+import user.domain.aggregate.user.UserService
 
 class DeleteUserUseCase(private val userService: UserService) {
 

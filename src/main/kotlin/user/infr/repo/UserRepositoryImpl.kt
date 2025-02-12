@@ -3,10 +3,10 @@ package user.infr.repo
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
-import user.domain.aggregate.user.User
-import user.domain.aggregate.user.entity.Email
-import user.domain.aggregate.user.entity.FullName
-import user.domain.aggregate.user.entity.Username
+import user.domain.aggregate.user.entity.User
+import user.domain.aggregate.user.entity.valueObjects.Email
+import user.domain.aggregate.user.entity.valueObjects.FullName
+import user.domain.aggregate.user.entity.valueObjects.Username
 import user.domain.repository.UserRepo
 import user.infr.repo.pm.UserTable
 

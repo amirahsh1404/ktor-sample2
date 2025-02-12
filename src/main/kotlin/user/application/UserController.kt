@@ -4,11 +4,11 @@ import user.application.failure.*
 import user.application.params.*
 import user.croscutting.ResultPackage.ResultFailure
 import user.croscutting.ResultPackage.UserResult
-import user.domain.aggregate.user.User
-import user.domain.aggregate.user.entity.Email
-import user.domain.aggregate.user.entity.FullName
-import user.domain.aggregate.user.entity.Password
-import user.domain.aggregate.user.entity.Username
+import user.domain.aggregate.user.entity.User
+import user.domain.aggregate.user.entity.valueObjects.Email
+import user.domain.aggregate.user.entity.valueObjects.FullName
+import user.domain.aggregate.user.entity.valueObjects.Password
+import user.domain.aggregate.user.entity.valueObjects.Username
 import user.domain.aggregate.user.model.cmd.ChangeInformationCmd
 import user.domain.aggregate.user.model.cmd.CreateUserCmd
 import user.domain.aggregate.user.model.cmd.DeleteUserCmd
@@ -20,7 +20,7 @@ import user.domain.aggregate.user.usecase.command.DeleteUserUseCase
 import user.domain.aggregate.user.usecase.command.LoginUserUseCase
 import user.domain.aggregate.user.usecase.query.GetInformationUseCase
 import user.domain.repository.UserRepo
-import user.domain.services.UserService
+import user.domain.aggregate.user.UserService
 import user.infr.repo.UserRepositoryImpl
 
 
