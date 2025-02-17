@@ -63,13 +63,13 @@ fun Application.configureRouting2() {
                         call.respond(HttpStatusCode.Accepted, "User logged in successfully")
                     }
 
-                    is UserResult.failure<*, *> -> {
+                    is UserResult.failure<*, LoginUserFailure> -> {
                         val failure = loginResult.failure
                         val statusCode = when (failure) {
                             is LoginUserFailure.InvalidParamsFailure -> HttpStatusCode.BadRequest
                             is LoginUserFailure.UserNotFound -> HttpStatusCode.NotFound
                             is LoginUserFailure.PasswordWrongFailure -> HttpStatusCode.NotAcceptable
-                            else -> HttpStatusCode.InternalServerError
+                            is LoginUserFailure.InvalidParamsFailure2 -> TODO()
                         }
                         call.respond(statusCode, MessageLoader.createMessage(failure.myFailure) )
                     }

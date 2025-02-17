@@ -74,7 +74,7 @@ class UserController {
         return UserResult.success(Unit)
     }
 
-    fun loginUser(params: LoginUserParams): UserResult<Unit, ResultFailure> {
+    fun loginUser(params: LoginUserParams): UserResult<Unit, CreateUserFailure> {
         val usernameResult = Username.makeNew(params.username)
         val passwordResult = Password.makeNew(params.password)
 
@@ -145,7 +145,7 @@ class UserController {
 
     }
 
-    fun deleteUser(params: DeleteUserParams): UserResult<Unit, ResultFailure> {
+    fun deleteUser(params: DeleteUserParams): UserResult<Unit, DeleteUserFailure> {
         val usernameResult = Username.makeNew(params.username)
 
         if (usernameResult is UserResult.failure) {
