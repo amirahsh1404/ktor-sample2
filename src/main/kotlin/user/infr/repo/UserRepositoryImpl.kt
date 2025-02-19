@@ -25,6 +25,8 @@ class UserRepositoryImpl : UserRepo {
             )
     }
 
+    
+
     override fun getByEmail(email: Email): User? {
         val user : ResultRow? = transaction {
             UserTable.selectAll().where { UserTable.email eq email.value }.singleOrNull()
