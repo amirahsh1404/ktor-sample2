@@ -9,4 +9,5 @@ sealed class DeleteUserFailure(failure : MyFailure) : ResultFailure(failure) {
 
 
     // la lalala la laaa
+    // babeiiiiiiiii
 }
