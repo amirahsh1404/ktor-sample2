@@ -25,7 +25,7 @@ class UserRepositoryImpl : UserRepo {
             )
     }
 
-    
+
 
     override fun getByEmail(email: Email): User? {
         val user : ResultRow? = transaction {
