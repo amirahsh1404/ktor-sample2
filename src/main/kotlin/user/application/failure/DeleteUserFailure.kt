@@ -14,4 +14,5 @@ sealed class DeleteUserFailure(failure : MyFailure) : ResultFailure(failure) {
     //asdfsdf
     ////rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
     //eeeeeeee
+    //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 }
