@@ -107,6 +107,8 @@ class UserController {
 
     }
 
+
+
     fun changeInformation(params: ChangeInformationParams): UserResult<Unit, ResultFailure> {
         val usernameResult: UserResult<Username, Username.Failure> = Username.makeNew(params.username)
         val fullNameResult = FullName.makeNew(params.fullName)
